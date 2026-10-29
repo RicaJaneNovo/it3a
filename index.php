@@ -21,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         logActivity(
             $pdo,
+            null,
             $login,
             'login',
             'failed'

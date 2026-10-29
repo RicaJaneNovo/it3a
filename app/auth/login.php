@@ -1,10 +1,8 @@
 
 <?php
 
-session_start();
-
 require_once __DIR__ . '/../../config/config.php';
-
+require_once __DIR__ . '/../../functions/sessions.php';
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -39,9 +37,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_username'] = $user['user_username'];
                 $_SESSION['user_role'] = $user['user_role'];
 
-                header('Location: ../admin/index.php');
-                exit;
+                // Log the session start
+                $_SESSION['session_id'] = startUserSession($pdo);
 
+                // Redirect by role
+                $redirects = [
+                    'admin'   => '../admin/index.php',
+                    'manager' => '../manager/index.php',
+                    'user'    => '../user/index.php',
+                ];
+                header('Location: ' . ($redirects[$user['user_role']] ?? '../../index.php'));
+                exit;
             } else {
 
                 $error = 'This account is not an admin account.';
